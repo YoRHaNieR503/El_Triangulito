@@ -2,10 +2,10 @@
 
 namespace ModuloMeseros.Models
 {
-    public class elTriangulitoDatabase:DbContext
+    public class elTriangulitoDBcontex:DbContext
     {
 
-        public elTriangulitoDatabase(DbContextOptions options) : base(options)
+        public elTriangulitoDBcontex(DbContextOptions options) : base(options)
         {
 
         }
