@@ -8,9 +8,9 @@ namespace ModuloMeseros.Controllers
 {
     public class DetallesController : Controller
     {
-        private readonly elTriangulitoDatabase _context;
+        private readonly elTriangulitoDBcontex _context;
 
-        public DetallesController(elTriangulitoDatabase context)
+        public DetallesController(elTriangulitoDBcontex context)
         {
             _context = context;
         }

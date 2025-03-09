@@ -6,9 +6,9 @@ namespace ModuloMeseros.Controllers
     public class MesasController : Controller
     {
 
-        private readonly elTriangulitoDatabase _DulceSavorDbContext;
+        private readonly elTriangulitoDBcontex _DulceSavorDbContext;
 
-        public MesasController(elTriangulitoDatabase DulceSavorDbContexto)
+        public MesasController(elTriangulitoDBcontex DulceSavorDbContexto)
         {
             _DulceSavorDbContext = DulceSavorDbContexto;
         }
