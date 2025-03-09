@@ -1,35 +1,221 @@
 ﻿@model IEnumerable<El_Triangulito.Models.categorias>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestión de Categorías";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.categoria)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.categoria)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id_categoria">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id_categoria">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id_categoria">Delete</a>
-            </td>
-        </tr>
+<!-- Mostrar mensajes de error -->
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
 }
-    </tbody>
-</table>
+
+<div class="container">
+    <!-- Encabezado -->
+    <div class="dashboard-header">
+        <h1><i class="fas fa-list-alt"></i> Gestión de Categorías</h1>
+        <p class="lead">Administra las categorías de los items del menú.</p>
+    </div>
+
+    <!-- Botón para abrir el modal de creación -->
+    <div class="text-end mb-4">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+            <i class="fas fa-plus"></i> Crear Nueva Categoría
+        </button>
+    </div>
+
+    <!-- Tabla de categorías -->
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.categoria)</td>
+                        <td class="text-end">
+                            <!-- Botón para editar -->
+                            <a href="#" class="btn btn-warning btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editCategoryModal" data-id="@item.id_categoria" data-categoria="@item.categoria">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <!-- Botón para detalles -->
+                            <a href="#" class="btn btn-info btn-sm btn-details" data-bs-toggle="modal" data-bs-target="#detailsCategoryModal" data-id="@item.id_categoria" data-categoria="@item.categoria">
+                                <i class="fas fa-info-circle"></i> Detalles
+                            </a>
+                            <!-- Botón para eliminar -->
+                            <a href="#" class="btn btn-danger btn-sm btn-delete" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" data-id="@item.id_categoria">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal de creación de categorías -->
+<div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCategoryModalLabel">Crear Nueva Categoría</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group mb-3">
+                        <label for="categoria" class="control-label">Nombre de la Categoría</label>
+                        <input name="categoria" id="categoria" class="form-control bg-dark text-white" placeholder="Ingrese el nombre de la categoría" required />
+                        <span class="text-danger"></span>
+                        <div class="invalid-feedback">
+                            Por favor, ingrese un nombre válido para la categoría.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-success">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de edición de categorías -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Editar Categoría</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm" method="post" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" id="editId" name="id_categoria" />
+                    <div class="form-group mb-3">
+                        <label for="editCategoria" class="control-label">Nombre de la Categoría</label>
+                        <input name="categoria" id="editCategoria" class="form-control bg-dark text-white" placeholder="Ingrese el nombre de la categoría" required />
+                        <span class="text-danger"></span>
+                        <div class="invalid-feedback">
+                            Por favor, ingrese un nombre válido para la categoría.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de detalles de categorías -->
+<div class="modal fade" id="detailsCategoryModal" tabindex="-1" aria-labelledby="detailsCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsCategoryModalLabel">Detalles de la Categoría</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-3">ID</dt>
+                    <dd class="col-sm-9" id="detailsId"></dd>
+
+                    <dt class="col-sm-3">Categoría</dt>
+                    <dd class="col-sm-9" id="detailsCategoria"></dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de eliminación de categorías -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCategoryModalLabel">Eliminar Categoría</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de que desea eliminar esta categoría?
+                <input type="hidden" id="deleteId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Cargar datos en el modal de edición
+        document.querySelectorAll('.btn-edit').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const categoria = this.getAttribute('data-categoria');
+
+                document.getElementById('editId').value = id;
+                document.getElementById('editCategoria').value = categoria;
+
+                // Configurar la acción del formulario
+                document.getElementById('editCategoryForm').action = `/categorias/Edit/${id}`;
+            });
+        });
+
+        // Cargar datos en el modal de detalles
+        document.querySelectorAll('.btn-details').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const categoria = this.getAttribute('data-categoria');
+
+                document.getElementById('detailsId').textContent = id;
+                document.getElementById('detailsCategoria').textContent = categoria;
+            });
+        });
+
+        // Cargar ID en el modal de eliminación
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                document.getElementById('deleteId').value = id;
+            });
+        });
+
+        // Confirmar eliminación
+        document.getElementById('confirmDelete').addEventListener('click', function () {
+            const id = document.getElementById('deleteId').value;
+            fetch(`/categorias/Delete/${id}`, {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload(); // Recargar la página después de eliminar
+                }
+            });
+        });
+    </script>
+}

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using El_Triangulito.Models;
 
@@ -21,68 +19,32 @@ namespace El_Triangulito.Controllers
         // GET: categorias
         public async Task<IActionResult> Index()
         {
+            // Mostrar mensajes de error si existen
+            if (TempData["Error"] != null)
+            {
+                ViewBag.Error = TempData["Error"];
+            }
             return View(await _context.categorias.ToListAsync());
         }
 
-        // GET: categorias/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var categorias = await _context.categorias
-                .FirstOrDefaultAsync(m => m.id_categoria == id);
-            if (categorias == null)
-            {
-                return NotFound();
-            }
-
-            return View(categorias);
-        }
-
-        // GET: categorias/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
         // POST: categorias/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id_categoria,categoria")] categorias categorias)
+        public async Task<IActionResult> Create([Bind("categoria")] categorias categorias)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(categorias);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(categorias);
-        }
-
-        // GET: categorias/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
+                return RedirectToAction(nameof(Index)); // Redirige al Index después de crear
             }
 
-            var categorias = await _context.categorias.FindAsync(id);
-            if (categorias == null)
-            {
-                return NotFound();
-            }
-            return View(categorias);
+            // Si el modelo no es válido, regresa al Index con los errores
+            TempData["Error"] = "Por favor, corrija los errores en el formulario.";
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: categorias/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("id_categoria,categoria")] categorias categorias)
@@ -112,24 +74,6 @@ namespace El_Triangulito.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(categorias);
-        }
-
-        // GET: categorias/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var categorias = await _context.categorias
-                .FirstOrDefaultAsync(m => m.id_categoria == id);
-            if (categorias == null)
-            {
-                return NotFound();
-            }
-
             return View(categorias);
         }
 

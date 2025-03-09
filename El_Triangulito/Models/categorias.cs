@@ -7,6 +7,8 @@ namespace El_Triangulito.Models
 
         [Key]
         public int id_categoria { get; set; }
+
+        [Required(ErrorMessage = "El nombre de la categoría es obligatorio.")]
         public string? categoria { get; set; }
 
     }
