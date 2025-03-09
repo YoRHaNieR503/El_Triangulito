@@ -8,7 +8,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<elTriangulitoDBcontex>(options =>
         options.UseSqlServer(
-                builder.Configuration.GetConnectionString("elTriangulitoDatabase")
+                builder.Configuration.GetConnectionString("elTriangulitoDbConnection")
             )
         );
 
