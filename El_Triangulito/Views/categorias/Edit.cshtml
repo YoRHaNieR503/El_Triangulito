@@ -1,0 +1,58 @@
+﻿@model ModuloMeseros.Models.categorias
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container mt-5">
+    <h1 class="text-white">Edit</h1>
+
+    <h4 class="text-white">categorias</h4>
+    <hr class="bg-light" />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="id_categoria" />
+                <div class="form-group mb-3">
+                    <label asp-for="categoria" class="control-label text-white"></label>
+                    <input asp-for="categoria" class="form-control bg-dark text-white" placeholder="Enter category name" required />
+                    <span asp-validation-for="categoria" class="text-danger"></span>
+                    <div class="invalid-feedback">
+                        Please provide a valid category name.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-success" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}
