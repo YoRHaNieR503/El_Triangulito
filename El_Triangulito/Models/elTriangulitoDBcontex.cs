@@ -25,5 +25,5 @@ namespace ModuloMeseros.Models
         public DbSet<encabezado_fac> encabezado_fac { get; set; }
 
         
-    }
 }
+    }
