@@ -115,8 +115,8 @@ namespace ModuloMeseros.Controllers
                 Comentario = Comentario
             };
 
-            _DulceSavorDbContext.comentario_pedidos.Add(nuevoComentario);
-            await _DulceSavorDbContext.SaveChangesAsync();
+            _elTriangulitoDBcontex.comentario_pedidos.Add(nuevoComentario);
+            await _elTriangulitoDBcontex.SaveChangesAsync();
 
             return RedirectToAction("Index", "Mesas");
         }
@@ -135,8 +135,8 @@ namespace ModuloMeseros.Controllers
                 Precio = precioO
             };
 
-            _DulceSavorDbContext.Detalle_Pedido.Add(nuevaOrden);
-            await _DulceSavorDbContext.SaveChangesAsync();
+            _elTriangulitoDBcontex.Detalle_Pedido.Add(nuevaOrden);
+            await _elTriangulitoDBcontex.SaveChangesAsync();
 
             return RedirectToAction("Index", "Mesas");
         }
@@ -153,8 +153,8 @@ namespace ModuloMeseros.Controllers
                 Fecha_Hora = fechaHora
             };
 
-            _DulceSavorDbContext.Cuenta.Add(nuevaCuenta);
-            await _DulceSavorDbContext.SaveChangesAsync();
+            _elTriangulitoDBcontex.Cuenta.Add(nuevaCuenta);
+            await _elTriangulitoDBcontex.SaveChangesAsync();
 
             // Llama al método para actualizar el estado de la mesa a "Ocupado" (ID = 1)
             await ActualizarEstadoMesa(idMesa, 1);
