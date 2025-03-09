@@ -6,19 +6,19 @@ namespace ModuloMeseros.Controllers
     public class MesasController : Controller
     {
 
-        private readonly elTriangulitoDBcontex _DulceSavorDbContext;
+        private readonly elTriangulitoDBcontex _elTriangulitoDBcontex;
 
-        public MesasController(elTriangulitoDBcontex DulceSavorDbContexto)
+        public MesasController(elTriangulitoDBcontex elTriangulitoDBcontexto)
         {
-            _DulceSavorDbContext = DulceSavorDbContexto;
+            _elTriangulitoDBcontex = elTriangulitoDBcontexto;
         }
 
 
         public IActionResult Index()
         {
 
-            int cantidadMesasOcupadas = (from m in _DulceSavorDbContext.mesas
-                                       join em in _DulceSavorDbContext.estados on m.id_estado equals em.id_estado
+            int cantidadMesasOcupadas = (from m in _elTriangulitoDBcontex.mesas
+                                       join em in _elTriangulitoDBcontex.estados on m.id_estado equals em.id_estado
                                        where em.tipo_estado == "mesas"
                                        && em.nombre == "ocupada"
                                        select m
@@ -26,15 +26,15 @@ namespace ModuloMeseros.Controllers
 
             ViewData["ListaMesasOcupadas"] = cantidadMesasOcupadas;
 
-            int cantidadMesas = (from m in _DulceSavorDbContext.mesas
+            int cantidadMesas = (from m in _elTriangulitoDBcontex.mesas
                                        select m
                                        ).Count();
 
             ViewData["ListaMesasCount"]=cantidadMesas;
 
 
-            var listadoMesasTodas = (from m in _DulceSavorDbContext.mesas
-                                    join em in _DulceSavorDbContext.estados on m.id_estado equals em.id_estado
+            var listadoMesasTodas = (from m in _elTriangulitoDBcontex.mesas
+                                    join em in _elTriangulitoDBcontex.estados on m.id_estado equals em.id_estado
                                      where em.tipo_estado == "mesas"
                                      select new
                                     {

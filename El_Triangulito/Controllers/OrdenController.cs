@@ -9,11 +9,11 @@ namespace ModuloMeseros.Controllers
 {
     public class OrdenController : Controller
     {
-        private readonly elTriangulitoDatabase _DulceSavorDbContext;
+        private readonly elTriangulitoDBcontex _elTriangulitoDBcontex;
 
-        public OrdenController(elTriangulitoDatabase DulceSavorDbContexto)
+        public OrdenController(elTriangulitoDBcontex elTriangulitoDBcontexto)
         {
-            _DulceSavorDbContext = DulceSavorDbContexto;
+            _elTriangulitoDBcontex = elTriangulitoDBcontexto;
         }
 
 
@@ -22,21 +22,21 @@ namespace ModuloMeseros.Controllers
         {
 
             DateTime hoy = DateTime.Today;
-            int cantidadOrdenesHoyMasUno = _DulceSavorDbContext.Cuenta
+            int cantidadOrdenesHoyMasUno = _elTriangulitoDBcontex.Cuenta
                                         .Count(c => c.Fecha_Hora.HasValue && c.Fecha_Hora.Value.Date == hoy) + 1;
 
             // Almacenar el resultado en un ViewData
 
             ViewData["ListaCuentassCount"] = cantidadOrdenesHoyMasUno;
 
-            var listaEstados = (from e in _DulceSavorDbContext.estados
+            var listaEstados = (from e in _elTriangulitoDBcontex.estados
                                 where e.tipo_estado == "Orden"
                                 select e).ToList();
 
             ViewData["Estados"] = new SelectList(listaEstados, "id_estado", "nombre");
 
 
-            var mesa = _DulceSavorDbContext.mesas.FirstOrDefault(m => m.id_mesa == idMesa);
+            var mesa = _elTriangulitoDBcontex.mesas.FirstOrDefault(m => m.id_mesa == idMesa);
 
             if (mesa == null)
             {
@@ -51,10 +51,10 @@ namespace ModuloMeseros.Controllers
 
 
 
-            var listadoDetallePedidos = (from dp in _DulceSavorDbContext.Detalle_Pedido
-                                     join cue in _DulceSavorDbContext.Cuenta on dp.Id_cuenta equals cue.Id_cuenta
-                                     join me in _DulceSavorDbContext.mesas on cue.Id_mesa equals me.id_mesa
-                                     join im in _DulceSavorDbContext.items_menu on dp.Id_plato equals im.id_item_menu
+            var listadoDetallePedidos = (from dp in _elTriangulitoDBcontex.Detalle_Pedido
+                                     join cue in _elTriangulitoDBcontex.Cuenta on dp.Id_cuenta equals cue.Id_cuenta
+                                     join me in _elTriangulitoDBcontex.mesas on cue.Id_mesa equals me.id_mesa
+                                     join im in _elTriangulitoDBcontex.items_menu on dp.Id_plato equals im.id_item_menu
                                      where cue.Id_mesa == idMesa
                                      select new
                                      {
@@ -69,10 +69,10 @@ namespace ModuloMeseros.Controllers
             ViewData["listadoDetallePedido"] = listadoDetallePedidos;
 
 
-            var totalPrecio = (from dp in _DulceSavorDbContext.Detalle_Pedido
-                               join cue in _DulceSavorDbContext.Cuenta on dp.Id_cuenta equals cue.Id_cuenta
-                               join me in _DulceSavorDbContext.mesas on cue.Id_mesa equals me.id_mesa
-                               join im in _DulceSavorDbContext.items_menu on dp.Id_plato equals im.id_item_menu
+            var totalPrecio = (from dp in _elTriangulitoDBcontex.Detalle_Pedido
+                               join cue in _elTriangulitoDBcontex.Cuenta on dp.Id_cuenta equals cue.Id_cuenta
+                               join me in _elTriangulitoDBcontex.mesas on cue.Id_mesa equals me.id_mesa
+                               join im in _elTriangulitoDBcontex.items_menu on dp.Id_plato equals im.id_item_menu
                                where cue.Id_mesa == idMesa
                                select dp.Precio).Sum();
             ViewData["TotalPrecio"] = totalPrecio;
@@ -85,11 +85,11 @@ namespace ModuloMeseros.Controllers
 
         public async Task<IActionResult> ActualizarEstadoMesa(int idMesa, int nuevoIdEstado)
         {
-            var mesa = await _DulceSavorDbContext.mesas.FindAsync(idMesa);
+            var mesa = await _elTriangulitoDBcontex.mesas.FindAsync(idMesa);
             if (mesa != null)
             {
                 mesa.id_estado = nuevoIdEstado;
-                await _DulceSavorDbContext.SaveChangesAsync();
+                await _elTriangulitoDBcontex.SaveChangesAsync();
             }
             return RedirectToAction("Index", "Mesas");
         }
@@ -97,7 +97,7 @@ namespace ModuloMeseros.Controllers
 
         public int ObtenerIdEstadoOcupada()
         {
-            var estadoOcupada = _DulceSavorDbContext.estados.FirstOrDefault(e => e.tipo_estado == "mesas" && e.nombre == "ocupada");
+            var estadoOcupada = _elTriangulitoDBcontex.estados.FirstOrDefault(e => e.tipo_estado == "mesas" && e.nombre == "ocupada");
             return estadoOcupada?.id_estado ?? 0; // Devuelve 0 si no se encuentra el estado "Ocupada"
         }
 
