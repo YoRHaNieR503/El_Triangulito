@@ -11,9 +11,9 @@ namespace ModuloMeseros.Controllers
 {
     public class categoriasController : Controller
     {
-        private readonly DulceSavorDbContext _context;
+        private readonly elTriangulitoDatabase _context;
 
-        public categoriasController(DulceSavorDbContext context)
+        public categoriasController(elTriangulitoDatabase context)
         {
             _context = context;
         }
