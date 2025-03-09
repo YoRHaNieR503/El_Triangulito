@@ -2,10 +2,10 @@
 
 namespace ModuloMeseros.Models
 {
-    public class DulceSavorDbContext:DbContext
+    public class elTriangulitoDatabase:DbContext
     {
 
-        public DulceSavorDbContext(DbContextOptions options) : base(options)
+        public elTriangulitoDatabase(DbContextOptions options) : base(options)
         {
 
         }

@@ -9,9 +9,9 @@ namespace ModuloMeseros.Controllers
 {
     public class OrdenController : Controller
     {
-        private readonly DulceSavorDbContext _DulceSavorDbContext;
+        private readonly elTriangulitoDatabase _DulceSavorDbContext;
 
-        public OrdenController(DulceSavorDbContext DulceSavorDbContexto)
+        public OrdenController(elTriangulitoDatabase DulceSavorDbContexto)
         {
             _DulceSavorDbContext = DulceSavorDbContexto;
         }

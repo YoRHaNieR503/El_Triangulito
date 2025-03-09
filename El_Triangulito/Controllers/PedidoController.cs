@@ -6,9 +6,9 @@ namespace ModuloMeseros.Controllers
     public class PedidoController : Controller
     {
 
-        private readonly DulceSavorDbContext _context;
+        private readonly elTriangulitoDatabase _context;
 
-        public PedidoController(DulceSavorDbContext context)
+        public PedidoController(elTriangulitoDatabase context)
         {
             _context = context;
         }
