@@ -1,0 +1,153 @@
+﻿@{
+    int idMesa = (int)ViewData["IdMesa"];
+    DateTime fechaHoraActual = DateTime.Now;
+
+
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h4 class="text-white">@ViewData["NumeroMesa"]</h4>
+            <h4 class="text-white">Cantidad de personas max: @ViewData["CantidadPersonas"]</h4>
+            <h4 class="text-white">Orden #@ViewData["ListaCuentassCount"]</h4>
+        </div>
+        <div class="col-md-2">
+            <h5 class="text-white">Estado orden:</h5>
+            <h5 class="text-white">
+
+                @Html.DropDownList("estadoCuenta", ViewData["Estados"] as SelectList, new { @id = "estadoDropDown", @class = "form-control bg-dark", @style = "color: yellow;", @onchange = "cambiarValorInput()" })
+
+            </h5>
+
+
+            <!-- Formulario para crear cuenta -->
+            <form method="post" asp-action="CrearCuenta" asp-controller="Orden">
+                <div class="form-group">
+                    <input type="hidden" name="idMesa" value="@idMesa">
+                    <input type="hidden" name="fechaHora" value="@fechaHoraActual">
+                    <input type="hidden" name="estadoCuenta" id="estado" value="" />
+                    <label class="text-white" for="nombre">Nombre:</label>
+                    <input type="text" class="form-control bg-dark text-white" id="nombre" name="nombre" required>
+
+                    <div class="invalid-feedback">
+                        Por favor ingresa un nombre.
+                    </div>
+                    <label class="text-white" for="cantPersonas">Cantidad de personas:</label>
+                    <input type="text" class="form-control bg-dark text-white" id="cantPersonas" name="cantPersonas" required>
+                    <div class="invalid-feedback">
+                        Por favor ingresa una cantidad de persona.
+                    </div>
+                </div>
+
+                <!-- Botón para crear la cuenta -->
+                <button type="submit" class="btn btn-primary">Crear cuenta</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10">
+            <!-- Tabla de órdenes -->
+            <table class="table table-borderless table-dark table-hover align-items-center" id="tablaOrdenes">
+                <thead>
+                    <tr>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-center">Pedido</th>
+                        <th class="text-center">Precio</th>
+                        <th class="text-center">Comentario</th>
+                        <th class="text-center">Tipo Plato</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detallePedido in (IEnumerable<dynamic>)ViewData["listadoDetallePedido"])
+                    {
+                        <tr>
+
+                            <td class="text-center">@detallePedido.Cantidad</td>
+                            <td class="text-center">@detallePedido.Pedido</td>
+                            <td class="text-center">$@detallePedido.Precio</td>
+                            <td class="text-center">
+
+                                <form method="post" asp-action="CrearComentario" asp-controller="Orden">
+                                    <input type="hidden" name="idProducto" value="@detallePedido.idPlato">
+                                    <input type="hidden" name="idPedido" value="@detallePedido.iDCuenta">
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="Comentario" rows="3" placeholder="Escriba un comentario aqui..."></textarea>
+                                    </div>
+                                </form>
+
+
+                            </td>
+                            <td class="text-center">@detallePedido.TipoPlato</td>
+                            <td>
+                                <button class="btn btn-danger" onclick="" asp-area="" asp-controller="Home" asp-action="Eliminar">Eliminar</button>
+                            </td>
+
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+        <div class="col-md-2">
+            <br />
+            <br>
+            <!-- Botones de categorías de menú -->
+            <div class="btn-group-vertical" role="group" aria-label="Menu">
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="6" asp-route-idMesa="@idMesa">Bebidas</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="1" asp-route-idMesa="@idMesa">Snacks</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="2" asp-route-idMesa="@idMesa">Comida</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="3" asp-route-idMesa="@idMesa">Pasteles</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="4" asp-route-idMesa="@idMesa">Combos</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="5" asp-route-idMesa="@idMesa">Promociones</a>
+                <br />
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <h3 class="text-left text-white">TOTAL: $@ViewData["TotalPrecio"]</h3>
+        <div class="col text-left">
+            <!-- Botones de acción -->
+            <button type="button" class="btn btn-primary" onclick="submitForm()">Ordenar</button>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-danger" asp-area="" asp-controller="Mesas" asp-action="">CANCELAR CUENTA</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function submitForm() {
+        // Envía el formulario
+        document.forms[0].submit();
+    }
+
+
+    function cambiarValorInput() {
+        // Obtener el valor seleccionado del DropDownList
+        var dropdown = document.getElementById("estadoDropDown");
+        var input = document.getElementById("estado");
+        var selectedValue = dropdown.value;
+
+        // Asignar el valor seleccionado al campo oculto
+        input.value = selectedValue;
+    }
+
+
+
+
+</script>

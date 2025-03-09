@@ -1,0 +1,136 @@
+﻿@{
+    int idMesa = (int)ViewData["IdMesa"];
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h4 class="text-white">@ViewData["NumeroMesa"]</h4>
+            <h4 class="text-white">Cantidad de personas max: @ViewData["CantidadPersonas"]</h4>
+            <h4 class="text-white">Nombre: @ViewData["NombreCliente"]</h4>
+            <h4 class="text-white">idCuenta: @ViewData["idCuenta"]</h4>
+        </div>
+        <div class="col-md-2">
+            <h5 class="text-white">Estado orden:</h5>
+            <h5 class="text-white">
+                Estado : @ViewData["NombreEstado"]
+            </h5>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10">
+            <!-- Tabla de órdenes -->
+            <form method="post" asp-action="Ordenar" asp-controller="Detalles">
+                <table class="table table-borderless table-dark table-hover align-items-center" id="tablaOrdenes">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">Pedido</th>
+                            <th class="text-center">Precio</th>
+                            <th class="text-center">Tipo Plato</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detallePedido in (IEnumerable<dynamic>)ViewData["listadoDetallePedido"])
+                        {
+                            <tr>
+                                <td class="text-center">@detallePedido.Cantidad</td>
+                                <td class="text-center">@detallePedido.Pedido</td>
+                                <td class="text-center">$@detallePedido.Precio</td>
+                                <td class="text-center">@detallePedido.TipoPlato</td>
+                                <td>
+                                    <input type="hidden" name="DetallePedidoIds" value="@detallePedido.Id_DetalleCuenta">
+                                    <button type="button" class="btn btn-danger btnEliminar" data-id="@detallePedido.Id_DetalleCuenta">Eliminar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <input type="hidden" id="idMesaCuenta" name="idMesaCuenta" value="@idMesa">
+                <input type="hidden" id="IdCuenta" name="IdCuenta" value="@ViewData["idCuenta"]">
+                <button type="submit" class="btn btn-primary">Ordenar</button>
+            </form>
+
+
+        </div>
+        <div class="col-md-2">
+            <br />
+            <br>
+            <!-- Botones de categorías de menú -->
+            <div class="btn-group-vertical" role="group" aria-label="Menu">
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="6" asp-route-idMesa="@idMesa">Bebidas</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="1" asp-route-idMesa="@idMesa">Snacks</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="2" asp-route-idMesa="@idMesa">Comida</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="3" asp-route-idMesa="@idMesa">Pasteles</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="4" asp-route-idMesa="@idMesa">Combos</a>
+                <br />
+                <a class="btn btn-secondary" asp-controller="Pedido" asp-action="" asp-route-id_categoria="5" asp-route-idMesa="@idMesa">Promociones</a>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <h3 class="text-left text-white">TOTAL: $@ViewData["TotalPrecio"]</h3>
+        <div class="col text-left">
+            <form id="cancelarCuentaForm" method="post" asp-action="CancelarCuenta" asp-controller="Detalles">
+                <input type="hidden" name="idMesaCuenta" value="@idMesa">
+                <button id="cancelarCuentaBtn" type="submit" class="btn btn-danger">CANCELAR CUENTA</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+
+        $(document).ready(function () {
+            // Verificar el estado y habilitar o deshabilitar el botón de "Cancelar Cuenta"
+            var nombreEstado = '@ViewData["NombreEstado"]';
+            if (nombreEstado !== "Solicitado" && nombreEstado !== "Ordenando") {
+                $("#cancelarCuentaBtn").prop("disabled", true);
+                $("#cancelarCuentaBtn").attr("title", "No se puede cancelar la cuenta en este estado");
+            }
+        });
+
+        // Función para mostrar un mensaje de alerta si el estado no permite cancelar la cuenta
+        $("#cancelarCuentaBtn").click(function () {
+            var nombreEstado = '@ViewData["NombreEstado"]';
+            if (nombreEstado !== "Solicitado" && nombreEstado !== "Ordenando") {
+                alert("No se puede cancelar la cuenta en este estado.");
+                return false; // Evitar enviar el formulario si el estado no permite la cancelación
+            }
+        });
+        
+
+        $(document).ready(function () {
+            $('.btnEliminar').click(function () {
+                var idDetallePedido = $(this).data('id');
+                if (confirm('¿Estás seguro de eliminar este producto?')) {
+                    $.ajax({
+                        url: '@Url.Action("EliminarProducto", "Detalles")',
+                        type: 'POST',
+                        data: { idDetallePedido: idDetallePedido },
+                        success: function (result) {
+                            location.reload(); // Recargar la página después de eliminar
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText); // Imprimir error en consola
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
+
