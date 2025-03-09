@@ -26,6 +26,7 @@
             left: 0;
             background-color: #343a40;
             padding-top: 20px;
+            overflow-y: auto;
         }
 
             .sidebar a {
@@ -103,6 +104,34 @@
             font-size: 2em;
             margin-bottom: 10px;
             color: #007bff;
+        }
+
+        /* Responsive Styles */
+        @@media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .dashboard-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-header p {
+                font-size: 0.9rem;
+            }
+
+            .btn-primary {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
