@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using El_Triangulito.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ModuloMeseros.Models;
 using System.Runtime.Intrinsics.Arm;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace ModuloMeseros.Controllers
+namespace El_Triangulito.Controllers
 {
     public class OrdenController : Controller
     {
@@ -52,19 +52,19 @@ namespace ModuloMeseros.Controllers
 
 
             var listadoDetallePedidos = (from dp in _elTriangulitoDBcontex.Detalle_Pedido
-                                     join cue in _elTriangulitoDBcontex.Cuenta on dp.Id_cuenta equals cue.Id_cuenta
-                                     join me in _elTriangulitoDBcontex.mesas on cue.Id_mesa equals me.id_mesa
-                                     join im in _elTriangulitoDBcontex.items_menu on dp.Id_plato equals im.id_item_menu
-                                     where cue.Id_mesa == idMesa
-                                     select new
-                                     {
-                                         Cantidad = dp.Cantidad,
-                                         Pedido = im.nombre,
-                                         Precio = dp.Precio,
-                                         TipoPlato = dp.Tipo_Plato,
-                                         iDCuenta = dp.Id_DetalleCuenta,
-                                         idPlato = dp.Id_plato
-                                     }).ToList();
+                                         join cue in _elTriangulitoDBcontex.Cuenta on dp.Id_cuenta equals cue.Id_cuenta
+                                         join me in _elTriangulitoDBcontex.mesas on cue.Id_mesa equals me.id_mesa
+                                         join im in _elTriangulitoDBcontex.items_menu on dp.Id_plato equals im.id_item_menu
+                                         where cue.Id_mesa == idMesa
+                                         select new
+                                         {
+                                             dp.Cantidad,
+                                             Pedido = im.nombre,
+                                             dp.Precio,
+                                             TipoPlato = dp.Tipo_Plato,
+                                             iDCuenta = dp.Id_DetalleCuenta,
+                                             idPlato = dp.Id_plato
+                                         }).ToList();
 
             ViewData["listadoDetallePedido"] = listadoDetallePedidos;
 
@@ -123,7 +123,7 @@ namespace ModuloMeseros.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CrearOrden(int idCuenta, int idPlato , int cantidad, string estadoOrden, char tipoPlato, decimal precioO)
+        public async Task<IActionResult> CrearOrden(int idCuenta, int idPlato, int cantidad, string estadoOrden, char tipoPlato, decimal precioO)
         {
             var nuevaOrden = new Detalle_Pedido
             {
@@ -169,7 +169,7 @@ namespace ModuloMeseros.Controllers
         public IActionResult AbrirPedidoPorCategoria(int idMesa, int idCategoria)
         {
             // Redirecciona al controlador de pedido y pasa el ID de la categoría como parámetro
-            return RedirectToAction("Index", "Pedido", new { idCategoria = idCategoria, idMesa = idMesa });
+            return RedirectToAction("Index", "Pedido", new { idCategoria, idMesa });
         }
 
     }

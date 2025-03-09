@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ModuloMeseros.Models
+namespace El_Triangulito.Models
 {
     public class combos
     {
@@ -10,7 +10,7 @@ namespace ModuloMeseros.Models
         public string? descripcion { get; set; }
         public decimal? precio { get; set; }
         public string? imagen { get; set; }
-        public int? id_estado { get; set;}
+        public int? id_estado { get; set; }
 
 
     }

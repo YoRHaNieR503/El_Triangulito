@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ModuloMeseros.Models
+namespace El_Triangulito.Models
 {
     public class encabezado_fac
     {

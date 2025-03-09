@@ -1,4 +1,4 @@
-namespace ModuloMeseros.Models
+namespace El_Triangulito.Models
 {
     public class ErrorViewModel
     {

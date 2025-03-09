@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ModuloMeseros.Models;
+﻿using El_Triangulito.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace ModuloMeseros.Controllers
+namespace El_Triangulito.Controllers
 {
     public class PedidoController : Controller
     {
@@ -73,7 +73,7 @@ namespace ModuloMeseros.Controllers
                 Estado = Estad,
                 Tipo_Plato = 'P',
                 Precio = totalPedido
-                
+
 
             };
 

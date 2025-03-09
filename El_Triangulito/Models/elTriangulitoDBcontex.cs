@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ModuloMeseros.Models
+
+namespace El_Triangulito.Models
 {
-    public class elTriangulitoDBcontex:DbContext
+    public class elTriangulitoDBcontex : DbContext
     {
 
         public elTriangulitoDBcontex(DbContextOptions options) : base(options)
@@ -24,6 +25,6 @@ namespace ModuloMeseros.Models
         public DbSet<Cuenta> Cuenta { get; set; }
         public DbSet<encabezado_fac> encabezado_fac { get; set; }
 
-        
-}
+
     }
+}

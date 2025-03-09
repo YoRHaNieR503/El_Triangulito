@@ -1,5 +1,5 @@
+using El_Triangulito.Models;
 using Microsoft.EntityFrameworkCore;
-using ModuloMeseros.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

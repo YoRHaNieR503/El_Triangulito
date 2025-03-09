@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ModuloMeseros.Models;
+﻿using El_Triangulito.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace ModuloMeseros.Controllers
+namespace El_Triangulito.Controllers
 {
     public class MesasController : Controller
     {
@@ -18,32 +18,32 @@ namespace ModuloMeseros.Controllers
         {
 
             int cantidadMesasOcupadas = (from m in _elTriangulitoDBcontex.mesas
-                                       join em in _elTriangulitoDBcontex.estados on m.id_estado equals em.id_estado
-                                       where em.tipo_estado == "mesas"
-                                       && em.nombre == "ocupada"
-                                       select m
+                                         join em in _elTriangulitoDBcontex.estados on m.id_estado equals em.id_estado
+                                         where em.tipo_estado == "mesas"
+                                         && em.nombre == "ocupada"
+                                         select m
                                        ).Count();
 
             ViewData["ListaMesasOcupadas"] = cantidadMesasOcupadas;
 
             int cantidadMesas = (from m in _elTriangulitoDBcontex.mesas
-                                       select m
+                                 select m
                                        ).Count();
 
-            ViewData["ListaMesasCount"]=cantidadMesas;
+            ViewData["ListaMesasCount"] = cantidadMesas;
 
 
             var listadoMesasTodas = (from m in _elTriangulitoDBcontex.mesas
-                                    join em in _elTriangulitoDBcontex.estados on m.id_estado equals em.id_estado
+                                     join em in _elTriangulitoDBcontex.estados on m.id_estado equals em.id_estado
                                      where em.tipo_estado == "mesas"
                                      select new
-                                    {
-                                        IDMesa=m.id_mesa,
-                                        Numero_Mesa = m.nombre_mesa,
-                                        CantidasPersonas = m.cantidad_personas,
-                                        Estado = em.nombre
+                                     {
+                                         IDMesa = m.id_mesa,
+                                         Numero_Mesa = m.nombre_mesa,
+                                         CantidasPersonas = m.cantidad_personas,
+                                         Estado = em.nombre
 
-                                    }).ToList();
+                                     }).ToList();
             ViewData["listadoMesaTodas"] = listadoMesasTodas;
 
 

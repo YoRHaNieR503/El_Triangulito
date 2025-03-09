@@ -1,10 +1,10 @@
 ﻿using Azure;
+using El_Triangulito.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ModuloMeseros.Models;
 using System.Linq;
 
-namespace ModuloMeseros.Controllers
+namespace El_Triangulito.Controllers
 {
     public class DetallesController : Controller
     {
@@ -57,14 +57,14 @@ namespace ModuloMeseros.Controllers
                                          where cue.Id_mesa == idMesaCuenta
                                          select new
                                          {
-                                             Cantidad = dp.Cantidad,
+                                             dp.Cantidad,
                                              Pedido = im.nombre,
-                                             Precio = dp.Precio,
+                                             dp.Precio,
                                              TipoPlato = dp.Tipo_Plato,
                                              IDCuenta = dp.Id_DetalleCuenta,
                                              IdPlato = dp.Id_plato,
-                                             Nombre = cue.Nombre,
-                                             Id_DetalleCuenta = dp.Id_DetalleCuenta
+                                             cue.Nombre,
+                                             dp.Id_DetalleCuenta
                                          }).ToList();
 
             ViewData["ListadoDetallePedido"] = listadoDetallePedidos;
@@ -121,7 +121,7 @@ namespace ModuloMeseros.Controllers
                 // Cambiar el estado de la cuenta
                 cuenta.Estado_cuenta = "3"; // Cambiar el estado a "Solicitado" o al número que represente ese estado
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", new { idMesaCuenta = idMesaCuenta });
+                return RedirectToAction("Index", new { idMesaCuenta });
             }
             else
             {
