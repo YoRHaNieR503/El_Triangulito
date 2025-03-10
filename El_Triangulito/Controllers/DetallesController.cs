@@ -19,7 +19,6 @@ namespace El_Triangulito.Controllers
         {
 
 
-
             var listaEstados = (from e in _context.estados
                                 join m in _context.mesas on e.id_estado equals m.id_estado
                                 join cue in _context.Cuenta on m.id_mesa equals cue.Id_mesa
