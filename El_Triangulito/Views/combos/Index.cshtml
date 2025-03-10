@@ -1,53 +1,134 @@
 ﻿@model IEnumerable<El_Triangulito.Models.combos>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestión de Combos";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.imagen)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.id_estado)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.imagen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.id_estado)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id_combo">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id_combo">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id_combo">Delete</a>
-            </td>
-        </tr>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
 }
-    </tbody>
-</table>
+
+<div class="container">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-box"></i> Gestión de Combos</h1>
+        <p class="lead">Administra los combos disponibles en el menú.</p>
+    </div>
+
+    <div class="text-end mb-4">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createComboModal">
+            <i class="fas fa-plus"></i> Crear Nuevo Combo
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.descripcion)</td>
+                        <td>$@Html.DisplayFor(modelItem => item.precio)</td>
+                        <td>@Html.DisplayFor(modelItem => item.id_estado)</td>
+                        <td class="text-end">
+                            <a href="#" class="btn btn-warning btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editComboModal"
+                               data-id="@item.id_combo" data-descripcion="@item.descripcion" data-precio="@item.precio" data-estado="@item.id_estado">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a href="#" class="btn btn-info btn-sm btn-details" data-bs-toggle="modal" data-bs-target="#detailsComboModal"
+                               data-id="@item.id_combo" data-descripcion="@item.descripcion" data-precio="@item.precio" data-estado="@item.id_estado">
+                                <i class="fas fa-info-circle"></i> Detalles
+                            </a>
+                            <a href="#" class="btn btn-danger btn-sm btn-delete" data-bs-toggle="modal" data-bs-target="#deleteComboModal" data-id="@item.id_combo">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal de Crear Combo -->
+<div class="modal fade" id="createComboModal" tabindex="-1" aria-labelledby="createComboModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createComboModalLabel">Crear Nuevo Combo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" method="post">
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <input type="text" name="descripcion" id="descripcion" class="form-control bg-dark text-white" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="precio" class="form-label">Precio</label>
+                        <input type="number" name="precio" id="precio" class="form-control bg-dark text-white" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_estado" class="form-label">Estado</label>
+                        <select name="id_estado" id="id_estado" class="form-control bg-dark text-white">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-success">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Otros modales de edición, detalles y eliminación aquí (siguiendo el mismo formato que el de categorías) -->
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        document.querySelectorAll('.btn-edit').forEach(button => {
+            button.addEventListener('click', function () {
+                document.getElementById('editId').value = this.dataset.id;
+                document.getElementById('editDescripcion').value = this.dataset.descripcion;
+                document.getElementById('editPrecio').value = this.dataset.precio;
+                document.getElementById('editEstado').value = this.dataset.estado;
+            });
+        });
+
+        document.querySelectorAll('.btn-details').forEach(button => {
+            button.addEventListener('click', function () {
+                document.getElementById('detailsId').textContent = this.dataset.id;
+                document.getElementById('detailsDescripcion').textContent = this.dataset.descripcion;
+                document.getElementById('detailsPrecio').textContent = "$" + this.dataset.precio;
+                document.getElementById('detailsEstado').textContent = this.dataset.estado == "1" ? "Activo" : "Inactivo";
+            });
+        });
+
+        document.querySelectorAll('.btn-delete').forEach(button => {
+            button.addEventListener('click', function () {
+                document.getElementById('deleteId').value = this.dataset.id;
+            });
+        });
+
+        document.getElementById('confirmDelete').addEventListener('click', function () {
+            fetch(`/combos/Delete/${document.getElementById('deleteId').value}`, {
+                method: 'POST',
+                headers: { 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value }
+            }).then(response => {
+                if (response.ok) { window.location.reload(); }
+            });
+        });
+    </script>
+}
