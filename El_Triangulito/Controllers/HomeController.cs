@@ -23,7 +23,7 @@ namespace El_Triangulito.Controllers
             ViewBag.TotalCategorias = _context.categorias.Count();
             ViewBag.TotalCombos = _context.combos.Count();
             ViewBag.MesasOcupadas = _context.mesas.Count(m => m.id_estado == 1); // Suponiendo que 1 es "Ocupada"
-            ViewBag.MesasDisponibles = _context.mesas.Count(m => m.id_estado == 0); // Suponiendo que 0 es "Disponible"
+            ViewBag.MesasDisponibles = _context.mesas.Count(m => m.id_estado == 2); // Suponiendo que 2 es "Disponible"
             ViewBag.PromocionesActivas = _context.Promociones
                 .Count(p => p.fecha_inicio <= DateOnly.FromDateTime(DateTime.Now) &&
                               p.fecha_final >= DateOnly.FromDateTime(DateTime.Now));
